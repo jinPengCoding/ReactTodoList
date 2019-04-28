@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Todo</title>
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="container">
+
+    </div>
+    <script type="text/babel">
+    const input = {
+      textAlign:'center',
+      width:'200px',
+      height:'20px'
+    }
+    const button={
+      width:'50px',
+      height:'25px',
+      marginLeft:'5px',
+      borderRadius:'10px',
+      outline:'none',
+      background:'#a4b0be',
+      border:'0px'
+
+    }
+    class Input extends React.Component{
+      constructor(props){
+        super(props)
+        this.state = {
+        }
+        this.handleChange=this.handleChange.bind(this)//现在绑定了自定义方法的this
+        this.oninputChange=this.oninputChange.bind(this)
+      }
+      handleChange(e){
+        this.props.inputChange(e)
+      }
+      oninputChange(){
+        this.props.buttonClick()
+
+      }
+      render(){
+        return(
+          <div>
+          <input style={input} value={this.props.value}   type="text" placeholder="add+" onChange={this.handleChange}/>
+          <input style={button} onClick={this.oninputChange} type="button" value="#add"/>
+          </div>
+        )
+      }
+
+    }
+    class Item extends React.Component{
+      constructor(props){
+        super(props)
+        this.hadleClick=this.hadleClick.bind(this)
+      }
+    hadleClick(){
+      this.props.ItemDelete(this.props.index)
+    }
+        render(){
+          return(
+            <li style={{listStyle:'none'}}>{this.props.item} <button onClick={this.hadleClick}>Delete</button></li>
+          )
+        }
+      }
+      class Todo extends React.Component{
+        constructor(props){
+          super(props)
+          this.state = {
+            arr:['刘金鹏','刘晓艺','丹丹','屁','沙雕'],
+            value:''
+          }
+          this.inputChange=this.inputChange.bind(this)
+          this.buttonClick=this.buttonClick.bind(this)
+          this.ItemDelete=this.ItemDelete.bind(this)
+
+        }
+        ItemDelete(haha){
+          let newArr = [...this.state.arr]
+          newArr.splice(haha,1)
+          this.setState({
+            arr:newArr
+          })
+        }
+        inputChange(e){
+          this.setState({
+            value:e.target.value
+          })
+        }
+        buttonClick(){
+          this.state.value  &&  this.setState({
+            arr:[...this.state.arr,this.state.value],
+            value:''
+          })
+        }
+        render(){
+          return(
+            <div style={{textAlign:'center'}}>
+              <h2 className="h2">Todo</h2>
+              <Input buttonClick={this.buttonClick} inputChange={this.inputChange} value ={this.state.value} arr={this.state.arr} />
+              <ul>
+              {this.state.arr.map((item,index)=>{
+                return <Item index={index} ItemDelete={this.ItemDelete} key={index} item={item}/>
+              })}
+              </ul>
+            </div>
+          )
+        }
+      }
+      ReactDOM.render(<Todo /> ,document.getElementById('container'))
+    </script>
+  </body>
+</html>
